@@ -22,10 +22,7 @@ function google() {
     if (user) {
       // Router.push('')
     } else {
-      Router.push({
-        pathname: "signup",
-        query: { socialEmail: email, loginType: "google" },
-      });
+      Router.push({ pathname: "signup", query: { socialEmail: email } });
     }
   };
   const onGoogleLoginError = (error: any) => {
