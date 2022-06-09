@@ -2,6 +2,7 @@ import axios from "axios";
 import React, { useEffect, useState } from "react";
 import AuthExpireModal from "../AuthExpireModal/AuthExpireModal";
 import Login from "../Login/Login";
+
 interface Props {
   //Starting from React 18 children prop is implicityl removed
   //https://solverfox.dev/writing/no-implicit-children/
@@ -22,9 +23,14 @@ const AuthWrapper: React.FC<Props> = ({ children }) => {
         axios.defaults.headers.common[
           "Authorization"
         ] = `Bearer ${accessToken}`;
-      } else {
-        // setIsAuthenticated(false);
+        setIsAuthenticated(true);
         setIsRefreshExpired(false);
+        //we have specified response status 403 to having no cookie in browser
+      } else if (response.status === 403) {
+        setIsAuthenticated(false);
+      } else {
+        //error 401
+        setIsRefreshExpired(true);
       }
     };
     updateAccessToken();
