@@ -1,7 +1,18 @@
-import React from "react";
+import React, { SetStateAction } from "react";
 
-const AuthExpireModal = ({}) => {
-  return <div>AuthExpireModal</div>;
+interface Props {
+  setIsProceedToLoginClicked: React.Dispatch<SetStateAction<boolean>>;
+}
+const AuthExpireModal: React.FC<Props> = ({ setIsProceedToLoginClicked }) => {
+  const onLoginButtonClick = () => {
+    setIsProceedToLoginClicked(true);
+  };
+  return (
+    <div>
+      <div>AuthExpireModal</div>
+      <button onClick={onLoginButtonClick}></button>
+    </div>
+  );
 };
 
 export default AuthExpireModal;

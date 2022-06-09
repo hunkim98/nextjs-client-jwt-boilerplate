@@ -10,17 +10,24 @@
   },
   "dependencies": {
     "@react-oauth/google": "^0.2.5",
+    "@reduxjs/toolkit": "^1.8.2",
     "axios": "^0.27.2",
     "next": "12.1.6",
+    "next-redux-wrapper": "^7.0.5",
     "react": "18.1.0",
-    "react-dom": "18.1.0"
+    "react-dom": "18.1.0",
+    "react-redux": "^8.0.2",
+    "redux": "^4.2.0",
+    "redux-logger": "^3.0.6"
   },
   "devDependencies": {
     "@types/node": "17.0.36",
     "@types/react": "18.0.9",
     "@types/react-dom": "18.0.5",
+    "@types/redux-logger": "^3.0.9",
     "eslint": "8.16.0",
     "eslint-config-next": "12.1.6",
+    "redux-devtools-extension": "^2.13.9",
     "typescript": "4.7.2"
   }
 }
