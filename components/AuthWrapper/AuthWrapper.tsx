@@ -70,6 +70,7 @@ const AuthWrapper: React.FC<Props> = ({ children }) => {
       .catch((error) => {
         //refresh token이 expire되면 오류가 뜰 것이다.
         //이 경우 사용자는 다시 로그인을 해야 한다.
+        setModalMessage(ModalMessage.EXPIRED);
         dispatch(invalidateRefreshToken());
         console.log(error, "you must login again");
       });
