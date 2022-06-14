@@ -1,5 +1,5 @@
 {
-  "name": "nestjs-test",
+  "name": "nextjs-auth-jwt-boilerplate",
   "version": "0.1.0",
   "private": true,
   "scripts": {
