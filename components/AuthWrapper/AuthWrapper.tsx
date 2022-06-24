@@ -9,7 +9,9 @@ import {
   validateRefreshToken,
 } from "../../store/modules/auth";
 import AuthExpireModal from "../AuthExpireModal/AuthExpireModal";
-import Login from "../Login/Login";
+import LoginModal from "../Login/LoginModal/LoginModal";
+import LoginPage from "../Login/LoginPage/LoginPage";
+import Portal from "../Portal/Portal";
 
 interface Props {
   //Starting from React 18 children prop is implicityl removed
@@ -27,8 +29,6 @@ enum ModalMessage {
 const JWT_EXPIRY_TIME = 600 * 1000;
 
 const AuthWrapper: React.FC<Props> = ({ children }) => {
-  const [isProceedToLoginClicked, setIsProceedToLoginClicked] =
-    useState<boolean>(false);
   const [modalMessage, setModalMessage] = useState<string>(
     ModalMessage.NO_TOKEN
   );
@@ -81,16 +81,15 @@ const AuthWrapper: React.FC<Props> = ({ children }) => {
       });
   };
 
-  if (isProceedToLoginClicked) {
-    return <Login redirectUrl={undefined} />;
-  }
   return (
     <>
-      {!isRefreshTokenValid && (
-        <AuthExpireModal
-          message={modalMessage}
-          setIsProceedToLoginClicked={setIsProceedToLoginClicked}
-        />
+      {isRefreshTokenValid && (
+        <Portal>
+          <LoginModal
+            message={modalMessage}
+            onTokenReceived={onTokenReceived}
+          />
+        </Portal>
       )}
       {children}
     </>

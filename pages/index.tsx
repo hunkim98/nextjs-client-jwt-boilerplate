@@ -13,11 +13,14 @@ import styles from "../styles/Home.module.css";
 export const getServerSideProps: GetServerSideProps = async ({ req, res }) => {
   // if you want to use getServerSideProps in next js,
   // you must specify the whole api since the client server will execute it
-  const sample = (await axios.get("http://localhost:5000/api")).data;
+  // const sample = (await axios.get("http://localhost:5000/api")).data;
+  // return {
+  //   props: {
+  //     sample,
+  //   },
+  // };
   return {
-    props: {
-      sample,
-    },
+    props: { sample: "hi" },
   };
 };
 
@@ -32,7 +35,7 @@ const Home: NextPage = ({
       setAccessToken(res.data);
     });
   }, []);
-  const onSubmit = (event: React.SyntheticEvent) => {
+  const onSubmit = async (event: React.SyntheticEvent) => {
     event.preventDefault();
     const target = event.target as typeof event.target & {
       email: { value: string };

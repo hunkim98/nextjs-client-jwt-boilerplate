@@ -5,12 +5,12 @@ import { useDispatch } from "react-redux";
 import {
   validateAuthentication,
   validateRefreshToken,
-} from "../../store/modules/auth";
+} from "../../../store/modules/auth";
 
 interface Props {
   redirectUrl: string | undefined;
 }
-const Login: React.FC<Props> = ({ redirectUrl }) => {
+const LoginPage: React.FC<Props> = ({ redirectUrl }) => {
   const dispatch = useDispatch();
   const onLoginSuccess = (accessToken: string) => {
     axios.defaults.headers.common["Authorization"] = `Bearer ${accessToken}`;
@@ -25,4 +25,4 @@ const Login: React.FC<Props> = ({ redirectUrl }) => {
   return <div>Login</div>;
 };
 
-export default Login;
+export default LoginPage;
