@@ -1,5 +1,6 @@
 import axios from "axios";
-import { RegisterBodyDto } from "../../dto/Register.dto.ts/register.dto";
+import Router from "next/router";
+import { RegisterBodyDto } from "../../dto/Register/register.dto";
 
 interface Props {}
 const Register: React.FC<Props> = () => {
@@ -10,15 +11,16 @@ const Register: React.FC<Props> = () => {
       nickname: { value: string };
       email: { value: string };
       password1: { value: string };
-      isTermsAgreed: { value: boolean };
-      isSnsAgreed: { value: boolean };
+      isTermsAgreed: { value: boolean; checked: boolean };
+      isSnsAgreed: { value: boolean; checked: boolean };
     };
     const name = target.name.value;
     const nickname = target.nickname.value;
     const email = target.email.value;
     const password = target.password1.value;
-    const isTermsAgreed = target.isTermsAgreed.value;
-    const isSnsAgreed = target.isSnsAgreed.value;
+    const isTermsAgreed = target.isTermsAgreed.checked;
+    const isSnsAgreed = target.isSnsAgreed.checked;
+    console.log(target.isTermsAgreed.checked);
     try {
       const registerBody: RegisterBodyDto = {
         nickname,
@@ -28,10 +30,8 @@ const Register: React.FC<Props> = () => {
         isSnsAgreed,
         isTermsAgreed,
       };
-      const registerResponse = await axios.post(
-        "/api/auth/register",
-        registerBody
-      );
+      await axios.post("/api/auth/register", registerBody);
+      Router.push("/");
     } catch (error) {}
   };
   return (

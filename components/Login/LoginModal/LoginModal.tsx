@@ -1,4 +1,5 @@
 import axios, { Axios, AxiosError, AxiosResponse } from "axios";
+import Router from "next/router";
 import React from "react";
 import ReactDOM from "react-dom";
 import { useDispatch } from "react-redux";
@@ -43,6 +44,10 @@ const LoginModal: React.FC<Props> = ({
       });
   };
 
+  const onClickRegister = (event: React.MouseEvent<HTMLButtonElement>) => {
+    Router.push({ pathname: "register" });
+  };
+
   return (
     <S.Container>
       <S.ModalContainer>
@@ -59,7 +64,7 @@ const LoginModal: React.FC<Props> = ({
             <input type="submit" value="로그인하기" />
           </div>
         </form>
-        <button>회원가입하기</button>
+        <button onClick={onClickRegister}>회원가입하기</button>
         <a href="">비밀번호를 잊어버리셨나요?</a>
       </S.ModalContainer>
     </S.Container>

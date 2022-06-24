@@ -26,6 +26,10 @@ const authSlice = createSlice({
     invalidateRefreshToken: (state) => {
       state.isRefreshTokenValid = false;
     },
+    initializeAuthentication: (state) => {
+      state.isAuthenticated = false;
+      state.isRefreshTokenValid = false;
+    },
   },
 });
 
@@ -35,5 +39,6 @@ export const {
   invalidateAuthentication,
   invalidateRefreshToken,
   validateRefreshToken,
+  initializeAuthentication,
 } = actions;
 export default reducer;

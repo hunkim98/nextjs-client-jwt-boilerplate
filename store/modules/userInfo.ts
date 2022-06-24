@@ -31,6 +31,11 @@ const userInfoSlice = createSlice({
     setAccessToken: (state, actions: PayloadAction<{ data: string }>) => {
       state.accessToken = actions.payload.data;
     },
+    initializeInfo: (state) => {
+      state.accessToken = "";
+      state.isEmailVerified = true;
+      state.membershipLevel = 0;
+    },
   },
 });
 
@@ -40,5 +45,6 @@ export const {
   invalidateEmailVerification,
   changeMembershipLevel,
   setAccessToken,
+  initializeInfo,
 } = actions;
 export default reducer;

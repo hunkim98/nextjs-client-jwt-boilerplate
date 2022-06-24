@@ -108,21 +108,20 @@ const AuthWrapper: React.FC<Props> = ({ children }) => {
 
   return (
     <>
-      {!isRefreshTokenValid ? (
-        !isEmailVerified ? (
-          <Portal>
-            <VerifyEmailModal />
-          </Portal>
-        ) : (
-          <Portal>
-            <LoginModal
-              message={modalMessage}
-              onTokenReceived={onTokenReceived}
-              onTokenFailure={onTokenFailure}
-            />
-          </Portal>
-        )
-      ) : null}
+      {!isRefreshTokenValid && (
+        <Portal>
+          <LoginModal
+            message={modalMessage}
+            onTokenReceived={onTokenReceived}
+            onTokenFailure={onTokenFailure}
+          />
+        </Portal>
+      )}
+      {isRefreshTokenValid && !isEmailVerified && (
+        <Portal>
+          <VerifyEmailModal />
+        </Portal>
+      )}
       {children}
     </>
   );
