@@ -1,4 +1,4 @@
-import axios, { AxiosResponse } from "axios";
+import axios, { AxiosError, AxiosResponse } from "axios";
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { VerifiedUserResDto } from "../../dto/common/verified.user.res.dto";
@@ -9,10 +9,17 @@ import {
   validateAuthentication,
   validateRefreshToken,
 } from "../../store/modules/auth";
+import {
+  changeMembershipLevel,
+  invalidateEmailVerification,
+  setAccessToken,
+  validateEmailVerification,
+} from "../../store/modules/userInfo";
 import AuthExpireModal from "../AuthExpireModal/AuthExpireModal";
 import LoginModal from "../Login/LoginModal/LoginModal";
 import LoginPage from "../Login/LoginPage/LoginPage";
 import Portal from "../Portal/Portal";
+import VerifyEmailModal from "../VerifyEmail/VerifyEmailModal";
 
 interface Props {
   //Starting from React 18 children prop is implicityl removed
@@ -38,19 +45,15 @@ const AuthWrapper: React.FC<Props> = ({ children }) => {
   const { isRefreshTokenValid, isAuthenticated } = useSelector(
     (state: RootState) => state.auth
   );
+  const { isEmailVerified } = useSelector((state: RootState) => state.userInfo);
   useEffect(() => {
-    axios.get("/api/auth/refresh").then(onTokenReceived);
+    axios.get("/api/auth/refresh").then(onTokenReceived).catch(onTokenFailure);
     //jwt expire 1분전에 accessToken 다시 업데이트
   }, []);
 
-  const onTokenReceived = (response: AxiosResponse<any, any>) => {
-    if (response.status === 200) {
-      const { accessToken } = response.data as VerifiedUserResDto;
-      axios.defaults.headers.common["Authorization"] = `Bearer ${accessToken}`;
-      dispatch(validateRefreshToken());
-      dispatch(validateAuthentication());
-      setTimeout(onSilentRefresh, JWT_EXPIRY_TIME - 60000);
-    } else if (response.status === 401) {
+  const onTokenFailure = async (error: AxiosError) => {
+    const errorStatus = error.response!.status;
+    if (errorStatus === 401) {
       //error 401
       //refresh token has expired.
       //still show the content to the users so we do not invalidate Authentication
@@ -61,11 +64,32 @@ const AuthWrapper: React.FC<Props> = ({ children }) => {
       }
       dispatch(invalidateRefreshToken());
     } else {
-      //we have specified response status 403 to having no cookie in browser
-      //403 means no cookie ever existed
+      //error 401
+      //refresh token has expired.
+      //still show the content to the users so we do not invalidate Authentication
       setModalMessage(ModalMessage.NO_TOKEN);
       dispatch(invalidateAuthentication());
       dispatch(invalidateRefreshToken());
+    }
+  };
+
+  const onTokenReceived = async (response: AxiosResponse<any, any>) => {
+    try {
+      const { accessToken, membershipLevel, isEmailVerified } =
+        response.data as VerifiedUserResDto;
+      axios.defaults.headers.common["Authorization"] = `Bearer ${accessToken}`;
+      dispatch(validateRefreshToken());
+      dispatch(validateAuthentication());
+      if (isEmailVerified) {
+        dispatch(validateEmailVerification());
+      } else {
+        dispatch(invalidateEmailVerification());
+      }
+      dispatch(changeMembershipLevel({ data: membershipLevel }));
+      dispatch(setAccessToken({ data: accessToken }));
+      setTimeout(onSilentRefresh, JWT_EXPIRY_TIME - 60000);
+    } catch (error) {
+      console.log(error);
     }
   };
 
@@ -84,14 +108,21 @@ const AuthWrapper: React.FC<Props> = ({ children }) => {
 
   return (
     <>
-      {isRefreshTokenValid && (
-        <Portal>
-          <LoginModal
-            message={modalMessage}
-            onTokenReceived={onTokenReceived}
-          />
-        </Portal>
-      )}
+      {!isRefreshTokenValid ? (
+        !isEmailVerified ? (
+          <Portal>
+            <VerifyEmailModal />
+          </Portal>
+        ) : (
+          <Portal>
+            <LoginModal
+              message={modalMessage}
+              onTokenReceived={onTokenReceived}
+              onTokenFailure={onTokenFailure}
+            />
+          </Portal>
+        )
+      ) : null}
       {children}
     </>
   );

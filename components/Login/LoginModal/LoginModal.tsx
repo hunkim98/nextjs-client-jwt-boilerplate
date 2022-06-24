@@ -1,4 +1,4 @@
-import axios, { AxiosResponse } from "axios";
+import axios, { Axios, AxiosError, AxiosResponse } from "axios";
 import React from "react";
 import ReactDOM from "react-dom";
 import { useDispatch } from "react-redux";
@@ -12,9 +12,14 @@ import * as S from "./styles";
 interface Props {
   message: string;
   onTokenReceived: (response: AxiosResponse<any, any>) => void;
+  onTokenFailure: (error: AxiosError) => void;
 }
 
-const LoginModal: React.FC<Props> = ({ message, onTokenReceived }) => {
+const LoginModal: React.FC<Props> = ({
+  message,
+  onTokenReceived,
+  onTokenFailure,
+}) => {
   const dispatch = useDispatch();
   const onLoginSuccess = (accessToken: string) => {
     axios.defaults.headers.common["Authorization"] = `Bearer ${accessToken}`;
@@ -30,13 +35,12 @@ const LoginModal: React.FC<Props> = ({ message, onTokenReceived }) => {
     };
     const email = target.email.value;
     const password = target.password.value;
-    try {
-      const axiosResponse = await onLogin({ email, password });
-      onTokenReceived(axiosResponse);
-    } catch (error) {
-      //if error, nothing will be executed except the catch
-      alert("로그인 정보가 잘못되었습니다");
-    }
+    await onLogin({ email, password })
+      .then(onTokenReceived)
+      .catch((error) => {
+        onTokenFailure(error);
+        alert("로그인 정보가 잘못되었습니다");
+      });
   };
 
   return (
