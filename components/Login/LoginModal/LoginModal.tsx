@@ -30,7 +30,6 @@ const LoginModal: React.FC<Props> = ({ message, onTokenReceived }) => {
     };
     const email = target.email.value;
     const password = target.password.value;
-    console.log("hi");
     try {
       const axiosResponse = await onLogin({ email, password });
       onTokenReceived(axiosResponse);

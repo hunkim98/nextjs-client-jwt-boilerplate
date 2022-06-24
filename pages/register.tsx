@@ -1,12 +1,11 @@
+import axios from "axios";
 import { NextPage } from "next";
 import React from "react";
+import Register from "../components/Register/Register";
+import { RegisterBodyDto } from "../dto/Register/register.dto";
 
-const Register: NextPage = () => {
-  const onSubmit = async (event: React.SyntheticEvent) => {};
-  return (
-    <div>
-      <div>Register</div>
-      <form></form>
-    </div>
-  );
+const RegisterPage: NextPage = () => {
+  return <Register />;
 };
+
+export default RegisterPage;

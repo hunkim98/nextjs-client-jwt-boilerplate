@@ -1,6 +1,7 @@
 import axios, { AxiosResponse } from "axios";
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
+import { VerifiedUserResDto } from "../../dto/common/verified.user.res.dto";
 import { RootState } from "../../store/modules";
 import {
   invalidateAuthentication,
@@ -44,7 +45,7 @@ const AuthWrapper: React.FC<Props> = ({ children }) => {
 
   const onTokenReceived = (response: AxiosResponse<any, any>) => {
     if (response.status === 200) {
-      const accessToken = response.data;
+      const { accessToken } = response.data as VerifiedUserResDto;
       axios.defaults.headers.common["Authorization"] = `Bearer ${accessToken}`;
       dispatch(validateRefreshToken());
       dispatch(validateAuthentication());
