@@ -1,6 +1,6 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 
-type UserInfoState = {
+export type UserInfoState = {
   isEmailVerified: boolean;
   membershipLevel: number | null;
 };

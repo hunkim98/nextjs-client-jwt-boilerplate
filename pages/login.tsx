@@ -1,7 +1,8 @@
 import { NextPage } from "next";
+import LoginPage from "../components/Login/LoginPage/LoginPage";
 
 const Login: NextPage = () => {
-  return <div></div>;
+  return <LoginPage redirectUrl="/" />;
 };
 
 export default Login;

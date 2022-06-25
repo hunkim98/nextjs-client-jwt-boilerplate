@@ -2,7 +2,10 @@ import axios from "axios";
 import { GetServerSideProps } from "next";
 import { VerifiedUserResDto } from "../dto/common/verified.user.res.dto";
 import wrapper from "../store/configureStore";
-import { validateAuthentication } from "../store/modules/auth";
+import {
+  initializeAuthentication,
+  validateAuthentication,
+} from "../store/modules/auth";
 import { setUserInfo } from "../store/modules/userInfo";
 
 export interface AuthFromClientServerInterface {
@@ -23,13 +26,19 @@ export const setAuthFromServerSide: GetServerSideProps<AuthFromClientServerInter
               headers: { Cookie: refreshCookie },
             })
           ).data as VerifiedUserResDto;
-          accessTokenData = accessToken;
-          store.dispatch(validateAuthentication({ accessToken }));
-          store.dispatch(setUserInfo({ membershipLevel, isEmailVerified }));
+          if (isEmailVerified) {
+            accessTokenData = accessToken;
+            store.dispatch(validateAuthentication({ accessToken }));
+            store.dispatch(setUserInfo({ membershipLevel, isEmailVerified }));
+          }
         }
+      }
+      if (!accessTokenData) {
+        store.dispatch(initializeAuthentication());
       }
       return { props: { accessToken: accessTokenData } };
     } catch (error) {
+      store.dispatch(initializeAuthentication());
       return { props: { accessToken: null } };
     }
   });

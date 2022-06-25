@@ -5,14 +5,12 @@ import {
   InferGetServerSidePropsType,
 } from "next";
 import React, { useEffect } from "react";
+import { connect } from "react-redux";
+import { bindActionCreators } from "redux";
 import AuthWrapper from "../components/AuthWrapper/AuthWrapper";
 import wrapper from "../store/configureStore";
-import { setUserInfo } from "../store/modules/userInfo";
+import { initializeAuthentication } from "../store/modules/auth";
 import { fetchWithAuth } from "../utils/fetchWithAuth";
-import {
-  AuthFromClientServerInterface,
-  setAuthFromServerSide,
-} from "../utils/setAuthFromServerSide";
 
 export const getServerSideProps: GetServerSideProps =
   wrapper.getServerSideProps((store) => async (context) => {
@@ -38,4 +36,4 @@ const Secure: NextPage = ({
   );
 };
 
-export default Secure;
+export default connect((state) => state)(Secure);

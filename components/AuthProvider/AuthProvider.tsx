@@ -30,8 +30,6 @@ const AuthContext = createContext<AuthHelperElement>({} as AuthHelperElement);
 
 const AuthContextProvider: React.FC<Props> = ({ children }) => {
   const dispatch = useDispatch();
-  const { isAuthenticated } = useSelector((state: RootState) => state.auth);
-  const { isEmailVerified } = useSelector((state: RootState) => state.userInfo);
   useEffect(() => {
     axios.get("/api/auth/refresh").then(onTokenReceived).catch(onTokenFailure);
     //jwt expire 1분전에 accessToken 다시 업데이트
@@ -53,11 +51,12 @@ const AuthContextProvider: React.FC<Props> = ({ children }) => {
   const onTokenReceived = (response: AxiosResponse<any, any>) => {
     const { accessToken, membershipLevel, isEmailVerified } =
       response.data as VerifiedUserResDto;
-    axios.defaults.headers.common["Authorization"] = `Bearer ${accessToken}`;
-    console.log("hihihihihihi receive");
-    dispatch(validateAuthentication({ accessToken }));
-    dispatch(setUserInfo({ isEmailVerified, membershipLevel }));
-    setTimeout(onSilentRefresh, JWT_EXPIRY_TIME - 60000);
+    if (isEmailVerified) {
+      axios.defaults.headers.common["Authorization"] = `Bearer ${accessToken}`;
+      dispatch(validateAuthentication({ accessToken }));
+      dispatch(setUserInfo({ isEmailVerified, membershipLevel }));
+      setTimeout(onSilentRefresh, JWT_EXPIRY_TIME - 60000);
+    }
   };
 
   const onSilentRefresh = () => {
@@ -75,11 +74,6 @@ const AuthContextProvider: React.FC<Props> = ({ children }) => {
   //email modal will show up in any website
   return (
     <AuthContext.Provider value={{ onTokenReceived, onTokenFailure }}>
-      {isAuthenticated && !isEmailVerified && (
-        <Portal>
-          <VerifyEmailModal />
-        </Portal>
-      )}
       {children}
     </AuthContext.Provider>
   );

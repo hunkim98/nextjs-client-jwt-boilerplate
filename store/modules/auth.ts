@@ -1,6 +1,6 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 
-type AuthState = {
+export type AuthState = {
   isAuthenticated: boolean;
   isRefreshTokenValid: boolean;
   accessToken: string | null;

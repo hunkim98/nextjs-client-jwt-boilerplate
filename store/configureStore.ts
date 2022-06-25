@@ -1,11 +1,11 @@
-import { configureStore } from "@reduxjs/toolkit";
+import { AnyAction, configureStore, Reducer } from "@reduxjs/toolkit";
 import { createWrapper } from "next-redux-wrapper";
 import logger from "redux-logger";
-import rootReducer from "./modules";
+import rootReducer, { RootState } from "./modules";
 
 export const store = () => {
   const store = configureStore({
-    reducer: rootReducer,
+    reducer: rootReducer as Reducer<RootState, AnyAction>,
     middleware: (getDefaultMiddleware) => getDefaultMiddleware().concat(logger),
   });
   return store;
