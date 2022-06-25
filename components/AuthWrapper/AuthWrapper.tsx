@@ -21,21 +21,17 @@ const AuthWrapper: React.FC<Props> = ({ children }) => {
     (state: RootState) => state.auth
   );
 
-  const returnModalMessage = () => {
-    if (isAuthenticated && !isRefreshTokenValid) {
-      return ModalMessage.EXPIRED_DURING_USE;
-    } else if (!isRefreshTokenValid) {
-      return ModalMessage.NO_TOKEN;
-    } else {
-      return ModalMessage.NO_TOKEN;
-    }
-  };
-
   return (
     <>
       {!isRefreshTokenValid && (
         <Portal>
-          <LoginModal message={returnModalMessage()} />
+          <LoginModal
+            message={
+              isAuthenticated && !isRefreshTokenValid
+                ? ModalMessage.EXPIRED_DURING_USE
+                : ModalMessage.NO_TOKEN
+            }
+          />
         </Portal>
       )}
       {children}

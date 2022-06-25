@@ -8,6 +8,8 @@ type AuthState = {
 
 const initialState: AuthState = {
   isAuthenticated: false,
+  //to prevent login modal to show everytime user visits secure content,
+  //we set the refresh token valid to true initially
   isRefreshTokenValid: true,
   accessToken: null,
 };
