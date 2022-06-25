@@ -12,7 +12,7 @@ const VerifyEmailModal: React.FC<Props> = () => {
   const dispatch = useDispatch();
   const [isButtonClicked, setIsButtonClicked] = useState<boolean>(false);
   const onButtonClick = async (event: React.MouseEvent<HTMLButtonElement>) => {
-    await axios.post("/api/register/token");
+    await axios.get("/api/auth/register/token");
     setIsButtonClicked(true);
   };
   const onLogoutClick = (event: React.MouseEvent<HTMLButtonElement>) => {
