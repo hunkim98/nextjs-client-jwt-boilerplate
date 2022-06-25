@@ -1,16 +1,27 @@
-import { NextPage } from "next";
+import axios from "axios";
+import {
+  GetServerSideProps,
+  NextPage,
+  InferGetServerSidePropsType,
+} from "next";
 import React, { useEffect } from "react";
-import { useSelector } from "react-redux";
 import AuthWrapper from "../components/AuthWrapper/AuthWrapper";
-import { RootState } from "../store/modules";
+import wrapper from "../store/configureStore";
 
-const Secure: NextPage = () => {
-  const { isAuthenticated } = useSelector((state: RootState) => state.auth);
-  useEffect(() => {
-    if (isAuthenticated) {
-      //fetch secure data if user is authenticated
-    }
-  }, [isAuthenticated]);
+export const getServerSideProps: GetServerSideProps =
+  wrapper.getServerSideProps((store) => async ({ req, res, ...etc }) => {
+    // const { isAuthenticated, accessToken } = store.getState().auth;
+
+    // if (accessToken) {
+    //   const API_URL = process.env.API_URL!;
+    //   await axios.get(API_URL.concat(""), {});
+    // }
+    return { props: { data: "hi" } };
+  });
+
+const Secure: NextPage = ({
+  data,
+}: InferGetServerSidePropsType<typeof getServerSideProps>) => {
   return (
     <AuthWrapper>
       <div>secure</div>

@@ -1,31 +1,23 @@
 import axios, { Axios, AxiosError, AxiosResponse } from "axios";
 import Router from "next/router";
-import React from "react";
+import React, { useContext } from "react";
 import ReactDOM from "react-dom";
 import { useDispatch } from "react-redux";
-import {
-  validateAuthentication,
-  validateRefreshToken,
-} from "../../../store/modules/auth";
+import { validateAuthentication } from "../../../store/modules/auth";
 import { onLogin } from "../../../utils/login";
+import { AuthContext } from "../../AuthProvider/AuthProvider";
 import * as S from "./styles";
 
 interface Props {
   message: string;
-  onTokenReceived: (response: AxiosResponse<any, any>) => void;
-  onTokenFailure: (error: AxiosError) => void;
 }
 
-const LoginModal: React.FC<Props> = ({
-  message,
-  onTokenReceived,
-  onTokenFailure,
-}) => {
+const LoginModal: React.FC<Props> = ({ message }) => {
   const dispatch = useDispatch();
+  const { onTokenReceived, onTokenFailure } = useContext(AuthContext);
   const onLoginSuccess = (accessToken: string) => {
     axios.defaults.headers.common["Authorization"] = `Bearer ${accessToken}`;
-    dispatch(validateRefreshToken());
-    dispatch(validateAuthentication());
+    dispatch(validateAuthentication({ accessToken }));
   };
   const onSubmit = async (event: React.SyntheticEvent) => {
     //we must do prevent default to prevent the website from refreshing

@@ -1,50 +1,36 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 
 type UserInfoState = {
-  accessToken: string;
   isEmailVerified: boolean;
-  membershipLevel: number;
+  membershipLevel: number | null;
 };
 
 const initialState: UserInfoState = {
-  accessToken: "",
-  isEmailVerified: true,
-  membershipLevel: 0,
+  isEmailVerified: false,
+  membershipLevel: null,
 };
 
 const userInfoSlice = createSlice({
   name: "userInfo",
   initialState,
   reducers: {
-    validateEmailVerification: (state) => {
-      state.isEmailVerified = true;
-    },
-    invalidateEmailVerification: (state) => {
-      state.isEmailVerified = false;
-    },
-    changeMembershipLevel: (
+    setUserInfo: (
       state,
-      actions: PayloadAction<{ data: number }>
+      actions: PayloadAction<{
+        isEmailVerified: boolean;
+        membershipLevel: number;
+      }>
     ) => {
-      state.membershipLevel = actions.payload.data;
-    },
-    setAccessToken: (state, actions: PayloadAction<{ data: string }>) => {
-      state.accessToken = actions.payload.data;
+      state.isEmailVerified = actions.payload.isEmailVerified;
+      state.membershipLevel = actions.payload.membershipLevel;
     },
     initializeInfo: (state) => {
-      state.accessToken = "";
-      state.isEmailVerified = true;
-      state.membershipLevel = 0;
+      state.isEmailVerified = false;
+      state.membershipLevel = null;
     },
   },
 });
 
 const { reducer, actions } = userInfoSlice;
-export const {
-  validateEmailVerification,
-  invalidateEmailVerification,
-  changeMembershipLevel,
-  setAccessToken,
-  initializeInfo,
-} = actions;
+export const { setUserInfo, initializeInfo } = actions;
 export default reducer;

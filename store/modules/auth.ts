@@ -1,34 +1,36 @@
-import { createSlice } from "@reduxjs/toolkit";
+import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 
 type AuthState = {
   isAuthenticated: boolean;
   isRefreshTokenValid: boolean;
+  accessToken: string | null;
 };
 
 const initialState: AuthState = {
   isAuthenticated: false,
   isRefreshTokenValid: true,
+  accessToken: null,
 };
 
 const authSlice = createSlice({
   name: "auth",
   initialState,
   reducers: {
-    validateAuthentication: (state) => {
+    validateAuthentication: (
+      state,
+      actions: PayloadAction<{ accessToken: string }>
+    ) => {
       state.isAuthenticated = true;
-    },
-    invalidateAuthentication: (state) => {
-      state.isAuthenticated = false;
-    },
-    validateRefreshToken: (state) => {
       state.isRefreshTokenValid = true;
+      state.accessToken = actions.payload.accessToken;
     },
-    invalidateRefreshToken: (state) => {
+    expireAuthentication: (state) => {
       state.isRefreshTokenValid = false;
     },
     initializeAuthentication: (state) => {
       state.isAuthenticated = false;
       state.isRefreshTokenValid = false;
+      state.accessToken = null;
     },
   },
 });
@@ -36,9 +38,7 @@ const authSlice = createSlice({
 const { reducer, actions } = authSlice;
 export const {
   validateAuthentication,
-  invalidateAuthentication,
-  invalidateRefreshToken,
-  validateRefreshToken,
+  expireAuthentication,
   initializeAuthentication,
 } = actions;
 export default reducer;
