@@ -8,13 +8,19 @@ import * as S from "./styles";
 
 interface Props {
   setIsEmailVerifyModalOpen: React.Dispatch<SetStateAction<boolean>>;
+  tempAccessTokenForEmailVerify: string | null;
 }
 
-const VerifyEmailModal: React.FC<Props> = ({ setIsEmailVerifyModalOpen }) => {
+const VerifyEmailModal: React.FC<Props> = ({
+  setIsEmailVerifyModalOpen,
+  tempAccessTokenForEmailVerify,
+}) => {
   const dispatch = useDispatch();
   const [isSendCodeClicked, setIsSendCodeClicked] = useState<boolean>(false);
   const onButtonClick = async (event: React.MouseEvent<HTMLButtonElement>) => {
-    await axios.get("/api/auth/register/token");
+    await axios.get("/api/auth/register/token", {
+      headers: { Authorization: `Bearer ${tempAccessTokenForEmailVerify}` },
+    });
     setIsSendCodeClicked(true);
   };
   const onLogoutClick = (event: React.MouseEvent<HTMLButtonElement>) => {

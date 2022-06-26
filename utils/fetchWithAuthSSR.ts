@@ -1,12 +1,9 @@
 import axios, { Method } from "axios";
 import { GetServerSidePropsContext, PreviewData } from "next";
 import { ParsedUrlQuery } from "querystring";
-import {
-  AuthFromClientServerInterface,
-  setAuthFromServerSide,
-} from "./setAuthFromServerSide";
+import { AuthFromClientServerInterface, setAuthSSR } from "./setAuthSSR";
 
-export const fetchWithAuth = async ({
+export const fetchWithAuthSSR = async ({
   context,
   url,
   method,
@@ -15,7 +12,7 @@ export const fetchWithAuth = async ({
   url: string;
   method: Method;
 }) => {
-  const serverSideAuthProps = await setAuthFromServerSide(context);
+  const serverSideAuthProps = await setAuthSSR(context);
   if (!("props" in serverSideAuthProps)) {
     throw new Error("invalid getSSP result");
   }

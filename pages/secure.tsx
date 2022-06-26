@@ -10,13 +10,13 @@ import { bindActionCreators } from "redux";
 import AuthWrapper from "../components/AuthWrapper/AuthWrapper";
 import wrapper from "../store/configureStore";
 import { initializeAuthentication } from "../store/modules/auth";
-import { fetchWithAuth } from "../utils/fetchWithAuth";
+import { fetchWithAuthSSR } from "../utils/fetchWithAuthSSR";
 
 export const getServerSideProps: GetServerSideProps =
   wrapper.getServerSideProps((store) => async (context) => {
     const API_URL = process.env.API_URL!;
     const data = (
-      await fetchWithAuth({
+      await fetchWithAuthSSR({
         url: API_URL.concat("/auth/check"),
         method: "GET",
         context,

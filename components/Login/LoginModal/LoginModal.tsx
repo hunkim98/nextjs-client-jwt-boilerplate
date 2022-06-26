@@ -18,6 +18,8 @@ interface Props {
 const LoginModal: React.FC<Props> = ({ message }) => {
   const [isEmailVerifyModalOpen, setIsEmailVerifyModalOpen] =
     useState<boolean>(false);
+  const [tempAccessTokenForEmailVerify, setTempAccessTokenForEmailVerify] =
+    useState<null | string>(null);
   const { onTokenReceived, onTokenFailure } = useContext(AuthContext);
   const onSubmit = async (event: React.SyntheticEvent) => {
     //we must do prevent default to prevent the website from refreshing
@@ -30,9 +32,11 @@ const LoginModal: React.FC<Props> = ({ message }) => {
     const password = target.password.value;
     await onLogin({ email, password })
       .then((response) => {
-        const { isEmailVerified } = response.data as VerifiedUserResDto;
+        const { isEmailVerified, accessToken } =
+          response.data as VerifiedUserResDto;
         if (!isEmailVerified) {
           setIsEmailVerifyModalOpen(true);
+          setTempAccessTokenForEmailVerify(accessToken);
         }
         return response;
       })
@@ -52,6 +56,7 @@ const LoginModal: React.FC<Props> = ({ message }) => {
       {isEmailVerifyModalOpen && (
         <Portal>
           <VerifyEmailModal
+            tempAccessTokenForEmailVerify={tempAccessTokenForEmailVerify}
             setIsEmailVerifyModalOpen={setIsEmailVerifyModalOpen}
           />
         </Portal>

@@ -1,7 +1,23 @@
-import { NextPage } from "next";
+import { GetServerSideProps, NextPage } from "next";
 import LoginPage from "../components/Login/LoginPage/LoginPage";
+import { getUserInfoSSR } from "../utils/getUserInfoSSR";
 
-const Login: NextPage = () => {
+type PageProps = {};
+
+export const getServerSideProps: GetServerSideProps = async (context) => {
+  const { accessToken, membershipLevel } = await getUserInfoSSR(context);
+  if (accessToken) {
+    return {
+      redirect: {
+        destination: "/",
+        permanent: false,
+      },
+    };
+  }
+  return { props: { data: null } };
+};
+
+const Login: NextPage<PageProps> = () => {
   return <LoginPage redirectUrl="/" />;
 };
 

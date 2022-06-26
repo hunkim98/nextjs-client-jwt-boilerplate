@@ -10,13 +10,15 @@ import { setUserInfo } from "../store/modules/userInfo";
 
 export interface AuthFromClientServerInterface {
   accessToken: string | null;
+  membershipLevel: number | null;
 }
 
-export const setAuthFromServerSide: GetServerSideProps<AuthFromClientServerInterface> =
+export const setAuthSSR: GetServerSideProps<AuthFromClientServerInterface> =
   //pre render everything inside
   wrapper.getServerSideProps((store) => async ({ req, res, ...etc }) => {
     try {
       let accessTokenData = store.getState().auth.accessToken;
+      let membershipLevelData = null;
       if (!accessTokenData) {
         const refreshCookie = req.headers.cookie;
         if (refreshCookie) {
@@ -30,15 +32,21 @@ export const setAuthFromServerSide: GetServerSideProps<AuthFromClientServerInter
             accessTokenData = accessToken;
             store.dispatch(validateAuthentication({ accessToken }));
             store.dispatch(setUserInfo({ membershipLevel, isEmailVerified }));
+            membershipLevelData = membershipLevel;
           }
         }
       }
       if (!accessTokenData) {
         store.dispatch(initializeAuthentication());
       }
-      return { props: { accessToken: accessTokenData } };
+      return {
+        props: {
+          accessToken: accessTokenData,
+          membershipLevel: membershipLevelData,
+        },
+      };
     } catch (error) {
       store.dispatch(initializeAuthentication());
-      return { props: { accessToken: null } };
+      return { props: { accessToken: null, membershipLevel: null } };
     }
   });
