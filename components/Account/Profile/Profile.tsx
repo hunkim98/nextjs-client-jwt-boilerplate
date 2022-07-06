@@ -1,7 +1,7 @@
 import * as S from "./styles";
 interface Props {}
 
-const MyProfile: React.FC<Props> = () => {
+const Profile: React.FC<Props> = () => {
   return (
     <S.Container>
       <S.Title>My Profile</S.Title>
@@ -9,4 +9,4 @@ const MyProfile: React.FC<Props> = () => {
   );
 };
 
-export default MyProfile;
+export default Profile;

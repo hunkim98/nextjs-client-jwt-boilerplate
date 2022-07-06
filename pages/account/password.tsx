@@ -1,6 +1,8 @@
+import axios from "axios";
 import { NextPage } from "next";
 import React, { useState } from "react";
 import AuthWrapper from "../../components/AuthWrapper/AuthWrapper";
+import { ChangePasswordBodyDto } from "../../dto/Password/change.password.dto";
 
 type PageProps = {};
 
@@ -11,8 +13,24 @@ const Password: NextPage<PageProps> = () => {
     newPassword2: string;
   }>({ oldPassword: "", newPassword1: "", newPassword2: "" });
 
+  const initializePasswordInfo = () => {
+    setPasswordInfo({ oldPassword: "", newPassword1: "", newPassword2: "" });
+  };
+
   const onSubmit = async (event: React.SyntheticEvent) => {
     event.preventDefault();
+    const data: ChangePasswordBodyDto = {
+      oldPassword: passwordInfo.oldPassword,
+      newPassword: passwordInfo.newPassword1,
+    };
+    if (passwordInfo.newPassword1 === passwordInfo.newPassword2) {
+      axios({ method: "POST", url: "/api/auth/password/change", data: data })
+        .then((res) => {
+          alert("비밀번호가 성공적으로 변경되었습니다");
+          initializePasswordInfo();
+        })
+        .catch((err) => console.log(err));
+    }
   };
   const handleOldPasswordChange = (
     event: React.ChangeEvent<HTMLInputElement>

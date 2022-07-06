@@ -33,11 +33,12 @@ const LoginPage: React.FC<Props> = () => {
         if (!isEmailVerified) {
           setIsEmailVerifyModalOpen(true);
           setTempAccessTokenForEmailVerify(accessToken);
+        } else {
+          onTokenReceived(response);
+          Router.push("/");
         }
         return response;
       })
-      .then(onTokenReceived)
-      .then(() => Router.push("/"))
       .catch((error) => {
         onTokenFailure(error);
         alert("로그인 정보가 잘못되었습니다");
@@ -70,7 +71,7 @@ const LoginPage: React.FC<Props> = () => {
         </div>
       </form>
       <button onClick={onClickRegister}>회원가입하기</button>
-      <a href="">비밀번호를 잊어버리셨나요?</a>
+      <a href="/account/find">비밀번호를 잊어버리셨나요?</a>
     </>
   );
 };

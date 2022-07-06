@@ -1,8 +1,8 @@
 export interface RegisterBodyDto {
-  email: string;
+  name: string;
   nickname: string;
 
-  name: string;
+  email: string;
 
   isTermsAgreed: boolean;
 
