@@ -6,6 +6,8 @@ This is a boilerplate for creating a nextjs frontend client. It uses jwt token t
 
 This repository uses next js for its frontend framework. Currently, this repository only has functionalities of logging in, verifying email, changing information of one's account. 
 
+### Reminders
+
 > This is the frontend framework for my `fullstack` boilerplate.
 > If you are interested in getting to know the client framework and admin framework, check out the below repositories also!
 
