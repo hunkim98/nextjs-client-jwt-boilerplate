@@ -55,7 +55,7 @@ export enum Role {
 }
 ```
 
-If you will to create your server on your own, beware that this frontend server assumes that your user model has the described properties. If you wish to have other properties feel free to. But do not forget that you need to also modify your backend model as well.
+If you will to create your server on your own, beware that this frontend server assumes that your user model has the described properties. If you wish to have other properties feel free to modify the properties. But do not forget that you need to also modify your backend model as well.
 
 ### Start project
 ```
