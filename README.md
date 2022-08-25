@@ -55,6 +55,14 @@ export enum Role {
 
 If you will to create your server on your own, beware that this frontend server assumes that your user model has the described properties. If you wish to have other properties feel free to. But do not forget that you need to also modify your backend model as well.
 
+### Start project
+```
+$ yarn dev
+```
+
+Then access `localhost:3000` in your browser
+
+
 ### Reminders
 
 - This client repository has functionalities for verifying email by tokens and verifying 'find my password' by tokens. For those verification `server-side-rendering` is utilized. Thus this client assumes that you send an email when the user 1) signs up, and 2) attempts to change password without logging in. This means that your backend server must send emails on those occasions, or else the pages prepared for those functionalities will not work.
