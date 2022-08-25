@@ -1,8 +1,6 @@
 # Nextjs client jwt boilerplate
 
-This is a boilerplate for creating a nextjs frontend client. It uses jwt token to authenticate users. The refresh token is assumed to be stored in the clients' browser. 
-
-> If you are not sure about how to set the jwt token in the browser, checkout my nestjs backend respository that is related to this frontend repository [nestjs-serverless-jwt-boilerplate](https://github.com/hunkim98/nestjs-serverless-jwt-boilerplate)
+This is a client site boilerplate of the series [nextjs-admin-jwt-boilerplate](https://github.com/hunkim98/nextjs-admin-jwt-boilerplate), [nestjs-auth-jwt-boilerplate](https://github.com/hunkim98/nestjs-serverless-jwt-boilerplate)
 
 This repository uses next js for its frontend framework. Currently, this repository only has functionalities of logging in, verifying email, changing information of one's account. 
 
