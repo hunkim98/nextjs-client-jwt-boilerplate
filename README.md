@@ -15,13 +15,13 @@ This repository uses next js for its frontend framework. Currently, this reposit
 
 <hr/>
 
-## Installation
+# Installation
 
 `yarn` or `npm install`
 
 <hr/>
 
-## Explanation
+# Explanation
 
 This repository assumes that the user model is structured as below
 
@@ -60,7 +60,7 @@ If you will to create your server on your own, beware that this frontend server 
 
 <hr/>
 
-## Start project
+# Start project
 ```
 $ yarn dev
 ```
@@ -69,11 +69,10 @@ Then access `localhost:3000` in your browser
 
 <hr/>
 
-## Keep in mind
+# Keep in mind
 
 - This client repository has functionalities for verifying email by tokens and verifying 'find my password' by tokens. For those verification `server-side-rendering` is utilized. Thus this client assumes that you send an email when the user 1) signs up, and 2) attempts to change password without logging in. This means that your backend server must send emails on those occasions, or else the pages prepared for those functionalities will not work.
 
 - If there is a secure content that you want to only expose to users who have logged in, use the AuthWrapper.tsx and wrap your react component with it. Then whenever a user not logged in attempts to access it, they will be shown a login modal. To see an example take a look at the `pages/account/index.tsx` file.
 
-HAPPY CODING!
 
