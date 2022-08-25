@@ -3,6 +3,8 @@ import Router from "next/router";
 import { useState } from "react";
 import { IsNicknameDuplicateBodyDto } from "../../dto/Register/nickname.duplicate.dto";
 import { RegisterBodyDto } from "../../dto/Register/register.dto";
+import useAlert from "../AlertContext/useAlert";
+import { isTelephoneValid } from "../../utils/validateForm";
 
 interface Props {}
 const Register: React.FC<Props> = () => {
@@ -14,16 +16,19 @@ const Register: React.FC<Props> = () => {
     password2: string;
     isTermsAgreed: boolean;
     isSnsAgreed: boolean;
+    telephone: string;
   }>({
     name: "",
     nickname: "",
     email: "",
     password1: "",
     password2: "",
+    telephone: "",
     isTermsAgreed: false,
     isSnsAgreed: false,
   });
   const [isNicknameUnique, setIsNicknameUnique] = useState<boolean>(false);
+  const alert = useAlert();
 
   const onCheckDuplicateNickname = (
     event: React.MouseEvent<HTMLButtonElement>
@@ -34,11 +39,21 @@ const Register: React.FC<Props> = () => {
     axios({ method: "POST", url: "/api/users/nickname/duplicate", data: data })
       .then((res) => {
         const isNicknameUsable: boolean = res.data as boolean;
-        console.log(res);
+        if (isNicknameUsable) {
+          alert.open({ message: "You can use the nickname" });
+        } else {
+          alert.open({ message: "Somebody else is using the nickname" });
+        }
         setIsNicknameUnique(isNicknameUsable);
       })
       .catch((err) => {
-        console.log(err);
+        const { status, data } = err.response;
+        const message = data.message;
+        if (message) {
+          alert.open({ message });
+        } else {
+          console.log(err);
+        }
       });
   };
 
@@ -46,18 +61,21 @@ const Register: React.FC<Props> = () => {
     event.preventDefault();
 
     if (registerInfo.password1 !== registerInfo.password2) {
-      alert("비밀번호가 서로 다릅니다");
+      alert.open({ message: "The passwords are different" });
       return;
     }
     if (!registerInfo.isTermsAgreed) {
-      alert("이용약관과 개인정보 처리방침에 동의해주세요");
+      alert.open({ message: "Pleas agree to the terms" });
       return;
     }
     if (!isNicknameUnique) {
-      alert("닉네임 중복확인 부탁드립니다");
+      alert.open({ message: "Please check if your nickname is unique" });
     }
-    if (!/^[A-Za-z0-9]+$/.test(registerInfo.nickname)) {
-      alert("닉네임은 영문자와 숫자의 조합으로 만들어주세요");
+    const phoneNumber = registerInfo.telephone.split("-").join("");
+
+    if (!isTelephoneValid(phoneNumber)) {
+      alert.open({ message: "Please input the correct telephone number" });
+      return;
     }
 
     const registerBody: RegisterBodyDto = {
@@ -65,13 +83,27 @@ const Register: React.FC<Props> = () => {
       nickname: registerInfo.nickname,
       email: registerInfo.email,
       password: registerInfo.password1,
+      telephone: registerInfo.telephone,
       isSnsAgreed: registerInfo.isSnsAgreed,
       isTermsAgreed: registerInfo.isTermsAgreed,
     };
-    await axios.post("/api/auth/register", registerBody).then((res) => {
-      alert("인증 이메일을 보냈습니다. 인증 절차를 진행해주세요");
-      Router.push("/login");
-    });
+    await axios
+      .post("/api/auth/register", registerBody)
+      .then((res) => {
+        alert.open({
+          message: "Verification email has been sent. Please check your email",
+        });
+        Router.push("/login");
+      })
+      .catch((err) => {
+        const { status, data } = err.response;
+        const message = data.message;
+        if (message) {
+          alert.open({ message });
+        } else {
+          console.log(err);
+        }
+      });
   };
   return (
     <div>
@@ -81,7 +113,7 @@ const Register: React.FC<Props> = () => {
         style={{ display: "flex", flexDirection: "column" }}
       >
         <label>
-          성함
+          <div>Name</div>
           <input
             required={true}
             type="text"
@@ -95,7 +127,7 @@ const Register: React.FC<Props> = () => {
           ></input>
         </label>
         <label>
-          닉네임
+          <div>Nickname</div>
           <input
             required={true}
             type="text"
@@ -108,12 +140,12 @@ const Register: React.FC<Props> = () => {
               });
             }}
           ></input>
-          <button onClick={onCheckDuplicateNickname}>
-            {!isNicknameUnique ? "중복 확인" : "확인 완료"}
+          <button type="button" onClick={onCheckDuplicateNickname}>
+            {!isNicknameUnique ? "Check Duplicate" : "Can be used!"}
           </button>
         </label>
         <label>
-          이메일(아이디)
+          <div>Email</div>
           <input
             required={true}
             type="email"
@@ -127,7 +159,21 @@ const Register: React.FC<Props> = () => {
           ></input>
         </label>
         <label>
-          비밀번호
+          <div>Telephone</div>
+          <input
+            required={true}
+            type="text"
+            name="telephone"
+            value={registerInfo.telephone}
+            onChange={(e) => {
+              setRegisterInfo((previous) => {
+                return { ...previous, telephone: e.target.value };
+              });
+            }}
+          ></input>
+        </label>
+        <label>
+          <div>Password</div>
           <input
             required={true}
             type="password"
@@ -141,7 +187,7 @@ const Register: React.FC<Props> = () => {
           ></input>
         </label>
         <label>
-          비밀번호 확인
+          <div>Check password</div>
           <input
             required={true}
             type="password"
@@ -166,8 +212,8 @@ const Register: React.FC<Props> = () => {
               });
             }}
           ></input>
-          [필수] <a href="#">이용약관</a>과 <a href="#">개인정보 처리방침</a>에
-          동의합니다
+          [Required] I agree to <a href="#">Terms</a> and{" "}
+          <a href="#">Privatcy policy</a>
         </label>
         <label>
           <input
@@ -180,10 +226,10 @@ const Register: React.FC<Props> = () => {
               });
             }}
           ></input>
-          [선택] 이벤트 소식 및 콘텐츠 뉴스레터를 받겠습니다
+          [Optional] I would like to be notified of events
         </label>
         <div>
-          <input type="submit" value="회원가입하기"></input>
+          <input type="submit" value="register"></input>
         </div>
       </form>
     </div>

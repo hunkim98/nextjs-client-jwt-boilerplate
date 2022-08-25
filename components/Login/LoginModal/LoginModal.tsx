@@ -6,9 +6,9 @@ import { useDispatch } from "react-redux";
 import { VerifiedUserResDto } from "../../../dto/common/verified.user.res.dto";
 import { validateAuthentication } from "../../../store/modules/auth";
 import { onLogin } from "../../../utils/login";
+import useAlert from "../../AlertContext/useAlert";
 import { AuthContext } from "../../AuthProvider/AuthProvider";
 import Portal from "../../Portal/Portal";
-import VerifyEmailModal from "../../VerifyEmail/VerifyEmailModal";
 import * as S from "./styles";
 
 interface Props {
@@ -16,10 +16,7 @@ interface Props {
 }
 
 const LoginModal: React.FC<Props> = ({ message }) => {
-  const [isEmailVerifyModalOpen, setIsEmailVerifyModalOpen] =
-    useState<boolean>(false);
-  const [tempAccessTokenForEmailVerify, setTempAccessTokenForEmailVerify] =
-    useState<null | string>(null);
+  const alert = useAlert();
   const { onTokenReceived, onTokenFailure } = useContext(AuthContext);
   const onSubmit = async (event: React.SyntheticEvent) => {
     //we must do prevent default to prevent the website from refreshing
@@ -35,49 +32,69 @@ const LoginModal: React.FC<Props> = ({ message }) => {
         const { isEmailVerified, accessToken } =
           response.data as VerifiedUserResDto;
         if (!isEmailVerified) {
-          setIsEmailVerifyModalOpen(true);
-          setTempAccessTokenForEmailVerify(accessToken);
+          alert.open({
+            message: "Please verify your email",
+            buttons: [
+              {
+                label: "send email",
+                onClick: () => {
+                  axios
+                    .get("/api/auth/register/token", {
+                      headers: { Authorization: `Bearer ${accessToken}` },
+                    })
+                    .then((res) => {
+                      alert.open({
+                        message: "verification email has been sent!",
+                      });
+                    })
+                    .catch((err) => {
+                      alert.open({ message: "An error has occurred" });
+                    });
+                },
+              },
+            ],
+          });
         }
         return response;
       })
       .then(onTokenReceived)
       .catch((error) => {
         onTokenFailure(error);
-        alert("로그인 정보가 잘못되었습니다");
+        alert.open({ message: "login information is wrong" });
       });
   };
 
   const onClickRegister = (event: React.MouseEvent<HTMLButtonElement>) => {
-    Router.push({ pathname: "register" });
+    event.preventDefault();
+    Router.push("/register");
+  };
+
+  const onClickFindAccount = (event: React.MouseEvent<HTMLButtonElement>) => {
+    event.preventDefault();
+    Router.push("/account/find");
   };
 
   return (
     <>
-      {isEmailVerifyModalOpen && (
-        <Portal>
-          <VerifyEmailModal
-            tempAccessTokenForEmailVerify={tempAccessTokenForEmailVerify}
-            setIsEmailVerifyModalOpen={setIsEmailVerifyModalOpen}
-          />
-        </Portal>
-      )}
       <S.Container>
         <S.ModalContainer>
           <div>Login</div>
           <div>{message}</div>
           <form onSubmit={onSubmit}>
             <label>
-              이메일 주소 <input type="text" name="email"></input>
+              email <input type="text" name="email"></input>
             </label>
             <label>
-              비밀번호<input type="password" name="password"></input>
+              password <input type="password" name="password"></input>
             </label>
             <div>
-              <input type="submit" value="로그인하기" />
+              <input type="submit" value="login" />
             </div>
           </form>
-          <button onClick={onClickRegister}>회원가입하기</button>
-          <a href="">비밀번호를 잊어버리셨나요?</a>
+          <button onClick={onClickRegister}>register</button>
+          <button onClick={onClickFindAccount}>
+            Did you forget your password?
+          </button>
         </S.ModalContainer>
       </S.Container>
     </>

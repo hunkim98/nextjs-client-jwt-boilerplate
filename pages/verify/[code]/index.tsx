@@ -6,6 +6,7 @@ import {
 } from "next";
 import Link from "next/link";
 import { useRouter } from "next/router";
+import { useEffect } from "react";
 import { VerifyTokenResDto } from "../../../dto/Register/verify.token.res.dto";
 
 type PageProps = {
@@ -31,14 +32,20 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
 
 const Verify: NextPage<PageProps> = ({ success }) => {
   const errorMessage =
-    "인증 코드가 올바르지 않거나 만료되었습니다. 로그인해서 인증 코드를 다시 받으세요.";
-  const successMessage = "인증되었습니다!";
+    "The code is not correct or the verification has expired. Please proceed to login and get the verify email again";
+  const successMessage = "Verified!!";
   return (
     <div>
       <div>{success ? successMessage : errorMessage}</div>
-      <Link href={"/login"}>
-        <button>로그인 페이지로 가기</button>
-      </Link>
+      {success ? (
+        <Link href={"/"}>
+          <button>Go to home</button>
+        </Link>
+      ) : (
+        <Link href={"/login"}>
+          <button>Go to login page</button>
+        </Link>
+      )}
     </div>
   );
 };

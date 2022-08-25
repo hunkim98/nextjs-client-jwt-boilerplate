@@ -7,7 +7,11 @@ import type {
   NextPageContext,
 } from "next";
 import Head from "next/head";
-import { useEffect, useState } from "react";
+import Link from "next/link";
+import { useContext, useEffect, useState } from "react";
+import { useSelector } from "react-redux";
+import { AuthContext } from "../components/AuthProvider/AuthProvider";
+import { RootState } from "../store/modules";
 import styles from "../styles/Home.module.css";
 
 export const getServerSideProps: GetServerSideProps = async ({ req, res }) => {
@@ -27,6 +31,10 @@ export const getServerSideProps: GetServerSideProps = async ({ req, res }) => {
 const Home: NextPage = ({
   sample,
 }: InferGetServerSidePropsType<typeof getServerSideProps>) => {
+  const { onLogout } = useContext(AuthContext);
+  const isAuthenticated = useSelector(
+    (state: RootState) => state.auth.isAuthenticated
+  );
   return (
     <div className={styles.container}>
       <Head>
@@ -36,8 +44,14 @@ const Home: NextPage = ({
       </Head>
 
       <main className={styles.main}>
-        <h1>홈페이지</h1>
-        <p>환영합니다!</p>
+        <h1>Home Page</h1>
+        <p>Welcome!</p>
+        <p>You are {isAuthenticated ? "loginned" : "not loginned"}</p>
+        <Link href="login">Login</Link>
+        <Link href="register">Register</Link>
+        <Link href="account">Account Info</Link>
+        <Link href="account/find">Find ID/Password</Link>
+        <button onClick={onLogout}>logout</button>
       </main>
       <footer className={styles.footer}></footer>
     </div>

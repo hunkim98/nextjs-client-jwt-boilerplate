@@ -10,6 +10,8 @@ export interface RegisterBodyDto {
 
   password: string;
 
+  telephone: string;
+
   socialLoginType?: SocialLoginType;
 
   socialLoginId?: string;

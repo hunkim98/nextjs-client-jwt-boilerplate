@@ -1,7 +1,9 @@
 {
-  "name": "nextjs-auth-jwt-boilerplate",
-  "version": "0.1.0",
+  "name": "nextjs-client-jwt-boilerplate",
+  "version": "1.0.0",
   "private": true,
+  "description": "A nextjs boilerplate that uses browser jwt cookie auth",
+  "author": "hunkim98",
   "scripts": {
     "dev": "next dev",
     "build": "next build",
@@ -18,6 +20,7 @@
     "next-redux-wrapper": "^7.0.5",
     "react": "18.1.0",
     "react-dom": "18.1.0",
+    "react-icons": "^4.4.0",
     "react-redux": "^8.0.2",
     "redux": "^4.2.0",
     "redux-logger": "^3.0.6",

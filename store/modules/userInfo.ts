@@ -1,13 +1,20 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
+import { Role } from "../../dto/entities/user";
 
 export type UserInfoState = {
   isEmailVerified: boolean;
-  membershipLevel: number | null;
+  role: Role | null;
+  name: string;
+  email: string;
+  telephone: string;
 };
 
 const initialState: UserInfoState = {
   isEmailVerified: false,
-  membershipLevel: null,
+  role: null,
+  name: "",
+  email: "",
+  telephone: "",
 };
 
 const userInfoSlice = createSlice({
@@ -18,15 +25,24 @@ const userInfoSlice = createSlice({
       state,
       actions: PayloadAction<{
         isEmailVerified: boolean;
-        membershipLevel: number;
+        role: Role;
+        name: string;
+        email: string;
+        telephone: string;
       }>
     ) => {
       state.isEmailVerified = actions.payload.isEmailVerified;
-      state.membershipLevel = actions.payload.membershipLevel;
+      state.role = actions.payload.role;
+      state.email = actions.payload.email;
+      state.name = actions.payload.name;
+      state.telephone = actions.payload.telephone;
     },
     initializeInfo: (state) => {
       state.isEmailVerified = false;
-      state.membershipLevel = null;
+      state.role = null;
+      state.email = "";
+      state.name = "";
+      state.telephone = "";
     },
   },
 });

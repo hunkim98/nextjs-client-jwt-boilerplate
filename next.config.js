@@ -1,9 +1,13 @@
 /** @type {import('next').NextConfig} */
 
 const serverDestination = process.env.API_URL + "/:path*";
+
 //there should only be one module.exports
 module.exports = {
   reactStrictMode: true,
+  compiler: {
+    styledComponents: true,
+  },
   async rewrites() {
     console.log(serverDestination);
     return [
@@ -11,10 +15,6 @@ module.exports = {
         source: "/api/:path*",
         destination: serverDestination, // Proxy to Backend
       },
-      // {
-      //   source: "/image/upload",
-      //   destination: "https://image.simpledimpleworld.com/upload", // Proxy to Backend
-      // },
     ];
   },
   env: {

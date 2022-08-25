@@ -1,4 +1,5 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
+import axios from "axios";
 
 export type AuthState = {
   isAuthenticated: boolean;
@@ -22,6 +23,9 @@ const authSlice = createSlice({
       state,
       actions: PayloadAction<{ accessToken: string }>
     ) => {
+      axios.defaults.headers.common[
+        "Authorization"
+      ] = `Bearer ${actions.payload.accessToken}`;
       state.isAuthenticated = true;
       state.isRefreshTokenValid = true;
       state.accessToken = actions.payload.accessToken;
