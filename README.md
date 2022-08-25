@@ -1,6 +1,6 @@
 # Nextjs client jwt boilerplate
 
-This is a client site boilerplate of the series [nextjs-admin-jwt-boilerplate](https://github.com/hunkim98/nextjs-admin-jwt-boilerplate), [nestjs-auth-jwt-boilerplate](https://github.com/hunkim98/nestjs-serverless-jwt-boilerplate)
+This is a client site boilerplate of the `fullstack series` [nextjs-admin-jwt-boilerplate](https://github.com/hunkim98/nextjs-admin-jwt-boilerplate), [nestjs-auth-jwt-boilerplate](https://github.com/hunkim98/nestjs-serverless-jwt-boilerplate)
 
 This repository uses next js for its frontend framework. Currently, this repository only has functionalities of logging in, verifying email, changing information of one's account. 
 
