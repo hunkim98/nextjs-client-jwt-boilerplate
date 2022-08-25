@@ -1,34 +1,65 @@
-This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+# Nextjs client jwt boilerplate
 
-## Getting Started
+This is a boilerplate for creating a nextjs frontend client. It uses jwt token to authenticate users. The refresh token is assumed to be stored in the clients' browser. 
 
-First, run the development server:
+> If you are not sure about how to set the jwt token in the browser, checkout my nestjs backend respository that is related to this frontend repository [nestjs-serverless-jwt-boilerplate](https://github.com/hunkim98/nestjs-serverless-jwt-boilerplate)
 
-```bash
-npm run dev
-# or
-yarn dev
+This repository uses next js for its frontend framework. Currently, this repository only has functionalities of logging in, verifying email, changing information of one's account. 
+
+> This is the frontend framework for my `fullstack` boilerplate.
+> If you are interested in getting to know the client framework and admin framework, check out the below repositories also!
+
+#### For Server: [nestjs-serverless-jwt-boilerplate](https://github.com/hunkim98/nestjs-serverless-jwt-boilerplate)
+
+#### For Admin: [nextjs-admin-jwt-boilerplate](https://github.com/hunkim98/nextjs-admin-jwt-boilerplate)
+
+
+## Installation
+
+`yarn` or `npm install`
+
+## Explanation
+
+This repository assumes that the user model is structured as below
+
+```ts
+export type User = {
+  id: number;
+  createdAt: Date;
+  updatedAt: Date;
+  deleted: boolean;
+  email: string;
+  nickname: string;
+  name: string;
+  password: string;
+  isTermsAgreed: boolean;
+  isSnsAgreed: boolean;
+  currentHashedRefreshToken: string | null;
+  socialLoginType: SocialLoginType | null;
+  socialLoginId: string | null;
+  telephone: string;
+  verified: boolean;
+  role: Role;
+  verificationId: number;
+};
+
+export enum SocialLoginType {
+  GOOGLE = "GOOGLE",
+}
+
+export enum Role {
+  USER = "USER",
+  ADMIN = "ADMIN",
+}
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+If you will to create your server on your own, beware that this frontend server assumes that your user model has the described properties. If you wish to have other properties feel free to. But do not forget that you need to also modify your backend model as well.
 
-You can start editing the page by modifying `pages/index.tsx`. The page auto-updates as you edit the file.
+### Reminders
 
-[API routes](https://nextjs.org/docs/api-routes/introduction) can be accessed on [http://localhost:3000/api/hello](http://localhost:3000/api/hello). This endpoint can be edited in `pages/api/hello.ts`.
+- This client repository has functionalities for verifying email by tokens and verifying 'find my password' by tokens. For those verification `server-side-rendering` is utilized. Thus this client assumes that you send an email when the user 1) signs up, and 2) attempts to change password without logging in. This means that your backend server must send emails on those occasions, or else the pages prepared for those functionalities will not work.
 
-The `pages/api` directory is mapped to `/api/*`. Files in this directory are treated as [API routes](https://nextjs.org/docs/api-routes/introduction) instead of React pages.
+- If there is a secure content that you want to only expose to loggineed users, use the AuthWrapper.tsx and wrap your react component with it. Then whenever a user not logged in attempts to access it, they will be shown a login modal.
 
-## Learn More
+HAPPY CODING!
 
-To learn more about Next.js, take a look at the following resources:
-
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js/) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/deployment) for more details.
