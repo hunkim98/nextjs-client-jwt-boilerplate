@@ -17,7 +17,15 @@ This repository uses next js for its frontend framework. Currently, this reposit
 
 # Installation
 
-`yarn` or `npm install`
+```
+$ yarn
+```
+
+or 
+
+```
+$ npm install
+```
 
 <hr/>
 
