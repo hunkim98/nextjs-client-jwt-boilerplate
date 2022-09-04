@@ -7,13 +7,14 @@ import { AlertContextProvider } from "../components/AlertContext/AlertContext";
 
 function MyApp({ Component, pageProps }: AppProps) {
   return (
-    <GoogleOAuthProvider clientId={process.env.GOOGLE_CLIENT_ID as string}>
-      <AlertContextProvider>
-        <AuthContextProvider>
-          <Component {...pageProps} />
-        </AuthContextProvider>
-      </AlertContextProvider>
-    </GoogleOAuthProvider>
+    // Google login is not finished
+    // <GoogleOAuthProvider clientId={process.env.GOOGLE_CLIENT_ID as string}>
+    <AlertContextProvider>
+      <AuthContextProvider>
+        <Component {...pageProps} />
+      </AuthContextProvider>
+    </AlertContextProvider>
+    // </GoogleOAuthProvider>
   );
 }
 
